@@ -1,0 +1,17 @@
+name: 'last-successful-build-action'
+description: 'Action to find the sha of the last successful workflow of a branch.'
+author: 'Samhammer AG'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN or a repo scoped PAT.'
+    default: ${{ github.token }}
+    required: true
+  branch:
+    description: 'Branch for the workflow to look for.'
+    required: true
+  workflow:
+    description: 'Workflow name to look for.'
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
