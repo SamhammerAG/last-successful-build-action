@@ -6100,6 +6100,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 function run() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = {
@@ -6110,9 +6111,17 @@ function run() {
             const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(inputs.token);
             const repository = process.env.GITHUB_REPOSITORY;
             const [owner, repo] = repository.split("/");
-            const response = yield octokit.actions.listWorkflowRunsForRepo({ owner, repo, branch: inputs.branch, status: "success" });
+            const workflows = yield octokit.actions.listRepoWorkflows({ owner, repo });
+            const workflowId = (_a = workflows.data.workflows.find(w => w.name === inputs.workflow)) === null || _a === void 0 ? void 0 : _a.id;
+            if (!workflowId) {
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`No workflow exists with the name "${inputs.workflow}"`);
+                return;
+            }
+            else {
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Discovered workflowId for search: ${workflowId}`);
+            }
+            const response = yield octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, branch: inputs.branch, status: "success" });
             const runs = response.data.workflow_runs
-                .filter(r => r.name === inputs.workflow)
                 .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
             let sha = process.env.GITHUB_SHA;
             if (runs.length > 0) {
@@ -6121,6 +6130,9 @@ function run() {
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using extracted sha ${run.head_sha} from run ${run.html_url} instead of triggering sha ${sha}.`);
                     sha = run.head_sha;
                 }
+            }
+            else {
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning("No recent workflow-run's found, use sha of this run!");
             }
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('sha', sha);
         }
