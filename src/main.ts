@@ -32,7 +32,7 @@ async function run(): Promise<void> {
         if (runs.length > 0) {
             const run = runs[0];
 
-            if (sha != run.head_sha) {
+            if (sha != run.head_sha && run.head_branch === inputs.branch) {
                 core.info(`Using extracted sha ${run.head_sha} from run ${run.html_url} instead of triggering sha ${sha}.`);
                 sha = run.head_sha;
             }
