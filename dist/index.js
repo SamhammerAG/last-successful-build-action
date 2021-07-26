@@ -6126,6 +6126,10 @@ function run() {
             let sha = process.env.GITHUB_SHA;
             if (runs.length > 0) {
                 const run = runs[0];
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`This SHA: ${sha}`);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Run SHA: ${run.head_sha}`);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Run Branch: ${run.head_branch}`);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Wanted branch: ${inputs.branch}`);
                 if (sha != run.head_sha && run.head_branch === inputs.branch) {
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using extracted sha ${run.head_sha} from run ${run.html_url} instead of triggering sha ${sha}.`);
                     sha = run.head_sha;
