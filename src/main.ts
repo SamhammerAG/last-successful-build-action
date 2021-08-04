@@ -23,8 +23,9 @@ async function run(): Promise<void> {
             core.info(`Discovered workflowId for search: ${workflowId}`);
         }
 
-        const response = await octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, branch: inputs.branch, status: "success" });
+        const response = await octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
         const runs = response.data.workflow_runs
+            .filter(x => (!inputs.branch || x.head_branch === inputs.branch) && x.conclusion === "success")
             .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
 
         let sha = process.env.GITHUB_SHA as string;

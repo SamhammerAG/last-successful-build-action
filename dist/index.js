@@ -6120,8 +6120,9 @@ function run() {
             else {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Discovered workflowId for search: ${workflowId}`);
             }
-            const response = yield octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, branch: inputs.branch, status: "success" });
+            const response = yield octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
             const runs = response.data.workflow_runs
+                .filter(x => (!inputs.branch || x.head_branch === inputs.branch) && x.conclusion === "success")
                 .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
             let sha = process.env.GITHUB_SHA;
             if (runs.length > 0) {
@@ -6130,7 +6131,7 @@ function run() {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Run SHA: ${run.head_sha}`);
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Run Branch: ${run.head_branch}`);
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Wanted branch: ${inputs.branch}`);
-                if (sha != run.head_sha && run.head_branch === inputs.branch) {
+                if (sha != run.head_sha && (!inputs.branch || run.head_branch === inputs.branch)) {
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using extracted sha ${run.head_sha} from run ${run.html_url} instead of triggering sha ${sha}.`);
                     sha = run.head_sha;
                 }
