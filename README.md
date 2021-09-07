@@ -8,15 +8,29 @@ The `sha` of the workflow-commit is set as output-parameter. If no matching work
 ```yml
       - uses: actions/checkout@v2
       - name: Find matching workflow
-        uses: SamhammerAG/last-successful-build-action@v1
+        uses: SamhammerAG/last-successful-build-action@v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           branch: "development"
           workflow: "build"
 ```
 
-## Config
+## Verifying workflow run SHAs
+If your workflow runs are expected to contain no-longer existing commit SHAs (e.g. when squashing and force pushing) you need to verify the SHA of the workflow run commit against the list of commit SHAs in your repository.
 
+```yml
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # check out the entire repo history for SHA verification
+      - name: Find matching workflow
+        uses: SamhammerAG/last-successful-build-action@v2
+        with:
+          branch: "development"
+          workflow: "build"
+          verify: true
+```
+
+## Config
 ### Action inputs
 
 | Name | Description | Default |
@@ -24,6 +38,7 @@ The `sha` of the workflow-commit is set as output-parameter. If no matching work
 | `token` | `GITHUB_TOKEN` or a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
 | `branch` | Branch for the workflow to look for. | "" |
 | `workflow` | Workflow name to look for. | "" |
+| `verify` | Verify workflow commit SHA against list of SHAs in repository | `false` |
 
 
 ### Action outputs
