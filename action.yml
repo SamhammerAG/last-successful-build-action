@@ -12,6 +12,10 @@ inputs:
   workflow:
     description: 'Workflow name to look for.'
     required: false
+  verify:
+    description: 'Verify SHA of workflow run commit against list of commit SHAs in repository'
+    required: false
+    default: 'false'
 runs:
   using: 'node12'
   main: 'dist/index.js'
