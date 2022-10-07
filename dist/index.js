@@ -9576,7 +9576,7 @@ function run() {
                 token: core.getInput("token"),
                 branch: core.getInput("branch"),
                 workflow: core.getInput("workflow"),
-                verify: core.getInput('verify')
+                verify: core.getInput("verify") === "true" ? true : false
             };
             const octokit = github.getOctokit(inputs.token);
             const repository = process.env.GITHUB_REPOSITORY;
