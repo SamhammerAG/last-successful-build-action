@@ -16,9 +16,9 @@ const verifyCommit =  async (sha: string): Promise<boolean> => {
             const { stdout } = await execAsync(cmd);
 
             repoShas = stdout.trim().split('\n');
-        } catch (e) {
+        } catch (e: any) {
             repoShas = [];
-            core.warning(`Error while attempting to get list of SHAs: ${e.message}`);
+            core.warning(`Error while attempting to get list of SHAs: ${e?.message}`);
 
             return false;
         }
@@ -42,7 +42,7 @@ async function run(): Promise<void> {
         const repository: string = process.env.GITHUB_REPOSITORY as string;
         const [owner, repo] = repository.split("/");
 
-        const workflows = await octokit.actions.listRepoWorkflows({ owner, repo });
+        const workflows = await octokit.rest.actions.listRepoWorkflows({ owner, repo });
         const workflowId = workflows.data.workflows.find(w => w.name === inputs.workflow)?.id;
 
         if (!workflowId) {
@@ -52,7 +52,7 @@ async function run(): Promise<void> {
             core.info(`Discovered workflowId for search: ${workflowId}`);
         }
 
-        const response = await octokit.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
+        const response = await octokit.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
         const runs = response.data.workflow_runs
             .filter(x => (!inputs.branch || x.head_branch === inputs.branch) && x.conclusion === "success")
             .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
@@ -93,8 +93,8 @@ async function run(): Promise<void> {
         }
 
         core.setOutput('sha', sha);
-    } catch (error) {
-        core.setFailed(error.message);
+    } catch (error: any) {
+        core.setFailed(error?.message);
     }
 }
 
