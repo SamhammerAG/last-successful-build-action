@@ -9582,7 +9582,7 @@ function run() {
             const repository = process.env.GITHUB_REPOSITORY;
             const [owner, repo] = repository.split("/");
             const workflows = yield octokit.rest.actions.listRepoWorkflows({ owner, repo });
-            const workflowId = (_a = workflows.data.workflows.find(w => w.name === inputs.workflow)) === null || _a === void 0 ? void 0 : _a.id;
+            const workflowId = (_a = workflows.data.workflows.find(w => w.name.toLowerCase() === inputs.workflow.toLowerCase())) === null || _a === void 0 ? void 0 : _a.id;
             if (!workflowId) {
                 core.setFailed(`No workflow exists with the name "${inputs.workflow}"`);
                 return;
