@@ -9602,7 +9602,7 @@ function run() {
                     core.debug(`Run SHA: ${run.head_sha}`);
                     core.debug(`Run Branch: ${run.head_branch}`);
                     core.debug(`Wanted branch: ${inputs.branch}`);
-                    if (!inputs.branch || run.head_branch !== inputs.branch) {
+                    if (inputs.branch && run.head_branch !== inputs.branch) {
                         continue;
                     }
                     if (inputs.verify && !(yield verifyCommit(run.head_sha))) {
