@@ -67,21 +67,23 @@ async function run(): Promise<void> {
                 core.debug(`Run Branch: ${run.head_branch}`);
                 core.debug(`Wanted branch: ${inputs.branch}`);
 
-                if (triggeringSha != run.head_sha && (!inputs.branch || run.head_branch === inputs.branch)) {
-                    if (inputs.verify && !await verifyCommit(run.head_sha)) {
-                        core.warning(`Failed to verify commit ${run.head_sha}. Skipping.`);
-                        continue;
-                    }
-
-                    core.info(
-                      inputs.verify
-                      ? `Commit ${run.head_sha} from run ${run.html_url} verified as last successful CI run.`
-                      : `Using ${run.head_sha} from run ${run.html_url} as last successful CI run.`
-                    );
-                    sha = run.head_sha;
-
-                    break;
+                if (!inputs.branch || !run.head_branch === inputs.branch){
+                    continue;
                 }
+
+                if (inputs.verify && !await verifyCommit(run.head_sha)) {
+                    core.warning(`Failed to verify commit ${run.head_sha}. Skipping.`);
+                    continue;
+                }
+
+                core.info(
+                    inputs.verify
+                    ? `Commit ${run.head_sha} from run ${run.html_url} verified as last successful CI run.`
+                    : `Using ${run.head_sha} from run ${run.html_url} as last successful CI run.`
+                );
+                sha = run.head_sha;
+
+                break;
             }
         } else {
             core.info(`No previous runs found for branch ${inputs.branch}.`);
