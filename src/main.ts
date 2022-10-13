@@ -67,7 +67,7 @@ async function run(): Promise<void> {
                 core.debug(`Run Branch: ${run.head_branch}`);
                 core.debug(`Wanted branch: ${inputs.branch}`);
 
-                if (!inputs.branch || run.head_branch !== inputs.branch){
+                if (inputs.branch && run.head_branch !== inputs.branch){
                     continue;
                 }
 
