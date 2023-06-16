@@ -6,7 +6,7 @@ The `sha` of the workflow-commit is set as output-parameter. If no matching work
 ## Usage
 
 ```yml
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - name: Find matching workflow
         uses: SamhammerAG/last-successful-build-action@v2
         with:
@@ -19,7 +19,7 @@ The `sha` of the workflow-commit is set as output-parameter. If no matching work
 If your workflow runs are expected to contain no-longer existing commit SHAs (e.g. when squashing and force pushing) you need to verify the SHA of the workflow run commit against the list of commit SHAs in your repository.
 
 ```yml
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # check out the entire repo history for SHA verification
       - name: Find matching workflow
