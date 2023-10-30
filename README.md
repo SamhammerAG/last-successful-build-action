@@ -38,6 +38,7 @@ If your workflow runs are expected to contain no-longer existing commit SHAs (e.
 | `token` | `GITHUB_TOKEN` or a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
 | `branch` | Branch for the workflow to look for. | "" |
 | `workflow` | Workflow name to look for. | "" |
+| `job` | Job name to look for. | "" |
 | `verify` | Verify workflow commit SHA against list of SHAs in repository | `false` |
 
 
