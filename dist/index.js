@@ -9610,15 +9610,20 @@ function run() {
                         core.warning(`Failed to verify commit ${run.head_sha}. Skipping.`);
                         continue;
                     }
-                    const jobs = yield octokit.rest.actions.listJobsForWorkflowRun({ owner, repo, run_id: run.id });
                     if (inputs.job) {
+                        const jobs = yield octokit.rest.actions.listJobsForWorkflowRun({ owner, repo, run_id: run.id });
+                        let skip = false;
                         for (const job of jobs.data.jobs) {
-                            if (job.name.toString() === inputs.job) {
+                            if (job.name === inputs.job) {
                                 if (job.conclusion !== "success") {
                                     core.warning(`Job ${job.name} from run ${run.html_url} is not successful. Skipping.`);
+                                    skip = true;
                                     continue;
                                 }
                             }
+                        }
+                        if (skip) {
+                            continue;
                         }
                     }
                     core.info(inputs.verify
