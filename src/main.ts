@@ -80,11 +80,13 @@ async function run(): Promise<void> {
                 const jobs = await octokit.rest.actions.listJobsForWorkflowRun({ owner, repo, run_id: run.id });
 
 
-                for(const job of jobs.data.jobs) {
-                    if(job.name.toString() === inputs.job) {
-                        if(job.conclusion !== "success") {
-                            core.warning(`Job ${job.name} from run ${run.html_url} is not successful. Skipping.`);
-                            continue;
+                if(inputs.job) {
+                    for(const job of jobs.data.jobs) {
+                        if(job.name.toString() === inputs.job) {
+                            if(job.conclusion !== "success") {
+                                core.warning(`Job ${job.name} from run ${run.html_url} is not successful. Skipping.`);
+                                continue;
+                            }
                         }
                     }
                 }
