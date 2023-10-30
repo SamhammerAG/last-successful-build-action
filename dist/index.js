@@ -9576,6 +9576,7 @@ function run() {
                 token: core.getInput("token"),
                 branch: core.getInput("branch"),
                 workflow: core.getInput("workflow"),
+                job: core.getInput("job"),
                 verify: core.getInput("verify") === "true" ? true : false
             };
             const octokit = github.getOctokit(inputs.token);
@@ -9608,6 +9609,15 @@ function run() {
                     if (inputs.verify && !(yield verifyCommit(run.head_sha))) {
                         core.warning(`Failed to verify commit ${run.head_sha}. Skipping.`);
                         continue;
+                    }
+                    const jobs = yield octokit.rest.actions.listJobsForWorkflowRun({ owner, repo, run_id: run.id });
+                    for (const job of jobs.data.jobs) {
+                        if (job.name.toString() === inputs.job) {
+                            if (job.conclusion !== "success") {
+                                core.warning(`Job ${job.name} from run ${run.html_url} is not successful. Skipping.`);
+                                continue;
+                            }
+                        }
                     }
                     core.info(inputs.verify
                         ? `Commit ${run.head_sha} from run ${run.html_url} verified as last successful CI run.`
