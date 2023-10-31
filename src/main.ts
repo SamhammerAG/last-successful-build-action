@@ -60,9 +60,11 @@ async function run(): Promise<void> {
 
         let triggeringSha = process.env.GITHUB_SHA as string;
         let sha: string | undefined = undefined;
+        let lastSha: string | undefined;
         
         if (runs.length > 0) {
             for (const run of runs) {
+                lastSha = run.head_sha;
                 core.debug(`This SHA: ${triggeringSha}`);
                 core.debug(`Run SHA: ${run.head_sha}`);
                 core.debug(`Run Branch: ${run.head_branch}`);
@@ -109,8 +111,8 @@ async function run(): Promise<void> {
         }
 
         if (!sha) {
-            core.warning("Unable to determine SHA of last successful commit. Using SHA for current commit.");
-            sha = triggeringSha;
+            core.warning(`Unable to determine SHA of last successful commit (possibly outside the window of ${runs.length} runs). Using earliest SHA available.`);
+            sha = lastSha;
         }
 
         core.setOutput('sha', sha);
