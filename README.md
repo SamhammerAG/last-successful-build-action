@@ -3,6 +3,9 @@
 This action searches for the last successful workflow-run for the given workflow-name and branch. 
 The `sha` of the workflow-commit is set as output-parameter. If no matching workflow exists, the `sha` of the current run is emitted.
 
+## Required Permissions:
+The Action requires the permission "read" for the "Actions" scope. This is set by default if you've configured your repositories Workflow permissions to "Read and write permissions". Alternatively you can explicitly set the permissions for the "actions" scope to "read" (see [githubs docs](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs#overview))
+
 ## Usage
 
 ```yml
