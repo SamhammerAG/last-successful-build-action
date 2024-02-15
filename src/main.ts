@@ -42,7 +42,7 @@ async function run(): Promise<void> {
         const repository: string = process.env.GITHUB_REPOSITORY as string;
         const [owner, repo] = repository.split("/");
 
-        const workflows = await octokit.paginate(octokit.rest.actions.listRepoWorkflows, { owner, repo});
+        const workflows = await octokit.paginate(octokit.rest.actions.listRepoWorkflows, { owner, repo, per_page: 100});
         const workflowId = workflows.find(w => w.name.toLowerCase() === inputs.workflow.toLowerCase())?.id;
 
         if (!workflowId) {
