@@ -42,8 +42,8 @@ async function run(): Promise<void> {
         const repository: string = process.env.GITHUB_REPOSITORY as string;
         const [owner, repo] = repository.split("/");
 
-        const workflows = await octokit.rest.actions.listRepoWorkflows({ owner, repo });
-        const workflowId = workflows.data.workflows.find(w => w.name.toLowerCase() === inputs.workflow.toLowerCase())?.id;
+        const workflows = await octokit.paginate(octokit.rest.actions.listRepoWorkflows, { owner, repo});
+        const workflowId = workflows.find(w => w.name.toLowerCase() === inputs.workflow.toLowerCase())?.id;
 
         if (!workflowId) {
             core.setFailed(`No workflow exists with the name "${inputs.workflow}"`);
