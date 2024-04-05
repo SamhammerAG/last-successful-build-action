@@ -49,3 +49,4 @@ If your workflow runs are expected to contain no-longer existing commit SHAs (e.
 | Name | Description | Default |
 | --- | --- | --- |
 | `sha` | Sha of the workflow-run matching the requirements. | `${{ github.sha }}` |
+| `run-id` | Id of the workflow-run matching the requirements. | `${{ github.run_id }}` |
