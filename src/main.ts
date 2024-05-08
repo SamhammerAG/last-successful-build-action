@@ -59,6 +59,7 @@ async function run(): Promise<void> {
 
         let triggeringSha = process.env.GITHUB_SHA as string;
         let sha: string | undefined = undefined;
+        let runId: number | undefined = undefined;
         
         if (runs.length > 0) {
             for (const run of runs) {
@@ -82,6 +83,7 @@ async function run(): Promise<void> {
                     : `Using ${run.head_sha} from run ${run.html_url} as last successful CI run.`
                 );
                 sha = run.head_sha;
+                runId = run.id;
 
                 break;
             }
@@ -90,11 +92,13 @@ async function run(): Promise<void> {
         }
 
         if (!sha) {
-            core.warning("Unable to determine SHA of last successful commit. Using SHA for current commit.");
+            core.warning("Unable to determine SHA of last successful commit. Using SHA and run id for current commit.");
             sha = triggeringSha;
+            runId = parseInt(process.env.GITHUB_RUN_ID as string);
         }
 
         core.setOutput('sha', sha);
+        core.setOutput('run-id', runId);
     } catch (error: any) {
         core.setFailed(error?.message);
     }
