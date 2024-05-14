@@ -28968,8 +28968,8 @@ const verifyCommit = (sha) => __awaiter(void 0, void 0, void 0, function* () {
     return repoShas.includes(sha);
 });
 function run() {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        var _a;
         try {
             const inputs = {
                 token: core.getInput("token"),
