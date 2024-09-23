@@ -28976,7 +28976,8 @@ function run() {
                 branch: core.getInput("branch"),
                 workflow: core.getInput("workflow"),
                 job: core.getInput("job"),
-                verify: core.getInput("verify") === "true" ? true : false
+                verify: core.getInput("verify") === "true" ? true : false,
+                fallbackToEarliestSha: core.getInput("fallbackToEarliestSha") === "true" ? true : false
             };
             const octokit = github.getOctokit(inputs.token);
             const repository = process.env.GITHUB_REPOSITORY;
@@ -29039,8 +29040,9 @@ function run() {
                 core.info(`No previous runs found for branch ${inputs.branch}.`);
             }
             if (!sha) {
-                core.warning(`Unable to determine SHA of last successful commit (possibly outside the window of ${runs.length} runs). Using earliest SHA available and run id for current commit.`);
-                sha = lastSha;
+                core.warning(`Unable to determine SHA of last successful commit (possibly outside the window of ${runs.length} runs). 
+                Using ${inputs.fallbackToEarliestSha ? "earliest available" : "triggering"} SHA and run id for current commit.`);
+                sha = inputs.fallbackToEarliestSha ? lastSha : triggeringSha;
                 runId = parseInt(process.env.GITHUB_RUN_ID);
             }
             core.setOutput('sha', sha);

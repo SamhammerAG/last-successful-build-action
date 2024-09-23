@@ -43,6 +43,7 @@ If your workflow runs are expected to contain no-longer existing commit SHAs (e.
 | `workflow` | Workflow name to look for. | "" |
 | `job` | Job name to look for. | "" |
 | `verify` | Verify workflow commit SHA against list of SHAs in repository | `false` |
+| `fallbackToEarliestSha` | If SHA of last successful commit can not be determined, use earliest (true) or triggering sha (false) | `false` |
 
 
 ### Action outputs
