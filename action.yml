@@ -15,6 +15,9 @@ inputs:
   workflow:
     description: 'Workflow name to look for.'
     required: false
+  job:
+    description: 'Job name to look for.'
+    required: false
   verify:
     description: 'Verify SHA of workflow run commit against list of commit SHAs in repository'
     required: false
