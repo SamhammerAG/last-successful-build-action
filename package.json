@@ -1,4 +1,4 @@
-{ 
+{
   "name": "last-successful-build-action",
   "version": "1.0.0",
   "private": true,
@@ -23,8 +23,8 @@
     "@actions/github": "~6.0.0"
   },
   "devDependencies": {
-    "@types/node": "~20.14.15",
+    "@types/node": "~22.14.0",
     "@vercel/ncc": "~0.38.3",
-    "typescript": "~5.7.2"
+    "typescript": "~5.8.3"
   }
 }
