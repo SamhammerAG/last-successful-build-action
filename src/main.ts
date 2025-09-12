@@ -54,7 +54,13 @@ async function run(): Promise<void> {
             core.info(`Discovered workflowId for search: ${workflowId}`);
         }
 
-        const response = await octokit.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
+        const params: Parameters<typeof octokit.rest.actions.listWorkflowRuns>[0] = { owner, repo, workflow_id: workflowId, per_page: 100 };
+        
+        if (inputs.branch) {
+            params.branch = inputs.branch;
+        }
+
+        const response = await octokit.rest.actions.listWorkflowRuns(params);
         const runs = response.data.workflow_runs
             .filter(x => (!inputs.branch || x.head_branch === inputs.branch) && (inputs.job || x.conclusion === "success"))
             .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
