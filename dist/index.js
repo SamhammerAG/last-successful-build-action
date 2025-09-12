@@ -1882,6 +1882,7 @@ class Context {
         this.action = process.env.GITHUB_ACTION;
         this.actor = process.env.GITHUB_ACTOR;
         this.job = process.env.GITHUB_JOB;
+        this.runAttempt = parseInt(process.env.GITHUB_RUN_ATTEMPT, 10);
         this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10);
         this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
         this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : `https://api.github.com`;
@@ -30009,7 +30010,11 @@ function run() {
             else {
                 core.info(`Discovered workflowId for search: ${workflowId}`);
             }
-            const response = yield octokit.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: workflowId, per_page: 100 });
+            const params = { owner, repo, workflow_id: workflowId, per_page: 100 };
+            if (inputs.branch) {
+                params.branch = inputs.branch;
+            }
+            const response = yield octokit.rest.actions.listWorkflowRuns(params);
             const runs = response.data.workflow_runs
                 .filter(x => (!inputs.branch || x.head_branch === inputs.branch) && (inputs.job || x.conclusion === "success"))
                 .sort((r1, r2) => new Date(r2.created_at).getTime() - new Date(r1.created_at).getTime());
