@@ -32,5 +32,5 @@ outputs:
   run-id:
     description: 'Id of the workflow-run matching the requirements.'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
